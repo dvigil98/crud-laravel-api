@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Contracts;
+namespace Src\Customers\Services\Contracts;
 
 interface ICustomerService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Contracts;
+namespace Src\Suppliers\Services\Contracts;
 
 interface ISupplierService
 {

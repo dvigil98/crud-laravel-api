@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace Src\Suppliers\Services;
 
-use App\Services\Contracts\ISupplierService;
-use App\Repositories\Contracts\ISupplierRepository;
-use App\Models\Supplier;
+use Src\Suppliers\Services\Contracts\ISupplierService;
+use Src\Suppliers\Repositories\Contracts\ISupplierRepository;
+use Src\Suppliers\Models\Supplier;
 
 class SupplierService implements ISupplierService
 {

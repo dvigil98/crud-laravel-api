@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models;
+namespace Src\Customers\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class Customer extends Model
 {
     use HasFactory;
 
-    protected $table = 'suppliers';
+    protected $table = 'customers';
     protected $primaryKey = 'id';
     protected $fillable = [
         'name',

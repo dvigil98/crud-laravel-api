@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Contracts;
+namespace Src\Customers\Repositories\Contracts;
 
-use App\Models\Customer;
+use Src\Customers\Models\Customer;
 
 interface ICustomerRepository
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repositories\Contracts;
+namespace Src\Suppliers\Repositories\Contracts;
 
-use App\Models\Supplier;
+use Src\Suppliers\Models\Supplier;
 
 interface ISupplierRepository
 {

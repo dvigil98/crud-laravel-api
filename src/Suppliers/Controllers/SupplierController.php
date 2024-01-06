@@ -1,36 +1,36 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Src\Suppliers\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\Contracts\ICustomerService;
-use App\Http\Requests\CustomerFormRequest;
+use App\Http\Controllers\Controller;
+use Src\Suppliers\Services\Contracts\ISupplierService;
+use Src\Suppliers\Requests\SupplierFormRequest;
 
-class CustomerController extends Controller
+class SupplierController extends Controller
 {
-    private $customerService;
+    private $supplierService;
 
-    public function __construct(ICustomerService $customerService)
+    public function __construct(ISupplierService $supplierService)
     {
-        $this->customerService = $customerService;
+        $this->supplierService = $supplierService;
     }
 
     public function index()
     {
-        $customers = $this->customerService->getCustomers();
+        $suppliers = $this->supplierService->getSuppliers();
         return response()->json([
             'code' => 200,
             'message' => 'Petición exitosa',
             'data' => [
-                'customers' => $customers
+                'suppliers' => $suppliers
             ]
         ], 200);
     }
 
-    public function store(CustomerFormRequest $request)
+    public function store(SupplierFormRequest $request)
     {
         $request->validated();
-        if ( $this->customerService->saveCustomer($request) ) {
+        if ( $this->supplierService->saveSupplier($request) ) {
             return response()->json([
                 'code' => 201,
                 'message' => 'Petición exitosa'
@@ -45,20 +45,20 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-        $customer = $this->customerService->getCustomer($id);
+        $supplier = $this->supplierService->getSupplier($id);
         return response()->json([
             'code' => 200,
             'message' => 'Petición exitosa',
             'data' => [
-                'customer' => $customer
+                'supplier' => $supplier
             ]
         ], 200);
     }
 
-    public function update($id, CustomerFormRequest $request)
+    public function update($id, SupplierFormRequest $request)
     {
         $request->validated();
-        if ( $this->customerService->updateCustomer($id, $request) ) {
+        if ( $this->supplierService->updateSupplier($id, $request) ) {
             return response()->json([
                 'code' => 200,
                 'message' => 'Petición exitosa'
@@ -73,7 +73,7 @@ class CustomerController extends Controller
 
     public function destroy($id)
     {
-        if ( $this->customerService->deleteCustomer($id) ) {
+        if ( $this->supplierService->deleteSupplier($id) ) {
             return response()->json([
                 'code' => 200,
                 'message' => 'Petición exitosa'
@@ -88,12 +88,12 @@ class CustomerController extends Controller
 
     public function search($critery, $value)
     {
-        $customers = $this->customerService->searchCustomer($critery, $value);
+        $suppliers = $this->supplierService->searchSupplier($critery, $value);
         return response()->json([
             'code' => 200,
             'message' => 'Petición exitosa',
             'data' => [
-                'customers' => $customers
+                'suppliers' => $suppliers
             ]
         ], 200);
     }

@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Repositories;
+namespace Src\Suppliers\Repositories;
 
-use App\Repositories\Contracts\ICustomerRepository;
-use App\Models\Customer;
+use Src\Suppliers\Repositories\Contracts\ISupplierRepository;
+use Src\Suppliers\Models\Supplier;
 
-class CustomerRepository implements ICustomerRepository
+class SupplierRepository implements ISupplierRepository
 {
     public function getAll()
     {
         try {
-            $customers = Customer::orderBy('dni', 'asc')->get();
-            return $customers;
+            $suppliers = Supplier::orderBy('dni', 'asc')->get();
+            return $suppliers;
         } catch (\Throwable $th) {
             return null;
         }
     }
 
-    public function saveOrUpdate(Customer $customer)
+    public function saveOrUpdate(Supplier $supplier)
     {
         try {
-            $customer->save();
+            $supplier->save();
             return true;
         } catch (\Throwable $th) {
             return false;
@@ -30,8 +30,8 @@ class CustomerRepository implements ICustomerRepository
     public function getById($id)
     {
         try {
-            $customer = Customer::find($id);
-            return $customer;
+            $supplier = Supplier::find($id);
+            return $supplier;
         } catch (\Throwable $th) {
             return null;
         }
@@ -40,7 +40,7 @@ class CustomerRepository implements ICustomerRepository
     public function delete($id)
     {
         try {
-            Customer::find($id)->delete();
+            Supplier::find($id)->delete();
             return true;
         } catch (\Throwable $th) {
             return false;
@@ -50,8 +50,8 @@ class CustomerRepository implements ICustomerRepository
     public function searchByCriteria($critery, $value)
     {
         try {
-            $customers = Customer::where($critery, 'LIKE', '%'.$value.'%')->orderBy('dni', 'asc')->get();
-            return $customers;
+            $suppliers = Supplier::where($critery, 'LIKE', '%'.$value.'%')->orderBy('dni', 'asc')->get();
+            return $suppliers;
         } catch (\Throwable $th) {
             return null;
         }

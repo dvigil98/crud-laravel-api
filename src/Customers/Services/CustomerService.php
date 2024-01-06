@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace Src\Customers\Services;
 
-use App\Services\Contracts\ICustomerService;
-use App\Repositories\Contracts\ICustomerRepository;
-use App\Models\Customer;
+use Src\Customers\Services\Contracts\ICustomerService;
+use Src\Customers\Repositories\Contracts\ICustomerRepository;
+use Src\Customers\Models\Customer;
 
 class CustomerService implements ICustomerService
 {
