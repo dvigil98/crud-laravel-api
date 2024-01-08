@@ -2,6 +2,10 @@
 
 namespace Src\Suppliers\Services;
 
+use Src\Suppliers\DTOs\CreateSupplierDto;
+use Src\Suppliers\DTOs\GetAllSuppliersDto;
+use Src\Suppliers\DTOs\GetSupplierDto;
+use Src\Suppliers\DTOs\UpdateSupplierDto;
 use Src\Suppliers\Services\Contracts\ISupplierService;
 use Src\Suppliers\Repositories\Contracts\ISupplierRepository;
 use Src\Suppliers\Models\Supplier;
@@ -17,76 +21,74 @@ class SupplierService implements ISupplierService
 
     public function getSuppliers()
     {
-        try {
-            $suppliers = $this->supplierRepository->getAll();
-            return $suppliers;
-        } catch (\Throwable $th) {
-            return $th;
+        $data = $this->supplierRepository->getAll();
+        $suppliers = [];
+        foreach ($data as $d) {
+            $supplier = new GetAllSuppliersDto($d->id, $d->name, $d->email, $d->dni);
+            array_push($suppliers, $supplier);
         }
+        return $suppliers;
     }
 
     public function saveSupplier($data)
     {
-        try {
-            $supplier = new Supplier();
-            $supplier->name = $data['name'];
-            $supplier->phone = $data['phone'];
-            $supplier->email = $data['email'];
-            $supplier->dni = $data['dni'];
-            $supplier->address = $data['address'];
-            if ( $this->supplierRepository->saveOrUpdate($supplier) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $supplier = new CreateSupplierDto(
+            0,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        if ($this->supplierRepository->save($supplier))
+            return true;
+        return false;
     }
 
     public function getSupplier($id)
     {
-        try {
-            $supplier = $this->supplierRepository->getById($id);
-            return $supplier;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $data = $this->supplierRepository->getById($id);
+        $supplier = new GetSupplierDto(
+            $data->id,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        return $supplier;
     }
 
     public function updateSupplier($id, $data)
     {
-        try {
-            $supplier = $this->supplierRepository->getById($id);
-            $supplier->name = $data['name'];
-            $supplier->phone = $data['phone'];
-            $supplier->email = $data['email'];
-            $supplier->dni = $data['dni'];
-            $supplier->address = $data['address'];
-            if ( $this->supplierRepository->saveOrUpdate($supplier) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $supplier = new UpdateSupplierDto(
+            $id,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        if ($this->supplierRepository->update($id, $supplier))
+            return true;
+        return false;
     }
 
     public function deleteSupplier($id)
     {
-        try {
-            if ( $this->supplierRepository->delete($id) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        if ($this->supplierRepository->delete($id))
+            return true;
+        return false;
     }
 
     public function searchSupplier($critery, $value)
     {
-        try {
-            $suppliers = $this->supplierRepository->searchByCriteria($critery, $value);
-            return $suppliers;
-        } catch (\Throwable $th) {
-            return $th;
+        $data = $this->supplierRepository->searchByCriteria($critery, $value);
+        $suppliers = [];
+        foreach ($data as $d) {
+            $supplier = new GetAllSuppliersDto($d->id, $d->name, $d->email, $d->dni);
+            array_push($suppliers, $supplier);
         }
+        return $suppliers;
     }
 }

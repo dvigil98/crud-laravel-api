@@ -4,7 +4,10 @@ namespace Src\Customers\Services;
 
 use Src\Customers\Services\Contracts\ICustomerService;
 use Src\Customers\Repositories\Contracts\ICustomerRepository;
-use Src\Customers\Models\Customer;
+use Src\Customers\DTOs\GetAllCustomersDto;
+use Src\Customers\DTOs\CreateCustomerDto;
+use Src\Customers\DTOs\GetCustomerDto;
+use Src\Customers\DTOs\UpdateCustomerDto;
 
 class CustomerService implements ICustomerService
 {
@@ -17,76 +20,74 @@ class CustomerService implements ICustomerService
 
     public function getCustomers()
     {
-        try {
-            $customers = $this->customerRepository->getAll();
-            return $customers;
-        } catch (\Throwable $th) {
-            return $th;
+        $data = $this->customerRepository->getAll();
+        $customers = [];
+        foreach ($data as $d) {
+            $customer = new GetAllCustomersDto($d->id, $d->name, $d->email, $d->dni);
+            array_push($customers, $customer);
         }
+        return $customers;
     }
 
     public function saveCustomer($data)
     {
-        try {
-            $customer = new Customer();
-            $customer->name = $data['name'];
-            $customer->phone = $data['phone'];
-            $customer->email = $data['email'];
-            $customer->dni = $data['dni'];
-            $customer->address = $data['address'];
-            if ( $this->customerRepository->saveOrUpdate($customer) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $customer = new CreateCustomerDto(
+            0,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        if ($this->customerRepository->save($customer))
+            return true;
+        return false;
     }
 
     public function getCustomer($id)
     {
-        try {
-            $customer = $this->customerRepository->getById($id);
-            return $customer;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $data = $this->customerRepository->getById($id);
+        $customer = new GetCustomerDto(
+            $data->id,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        return $customer;
     }
 
     public function updateCustomer($id, $data)
     {
-        try {
-            $customer = $this->customerRepository->getById($id);
-            $customer->name = $data['name'];
-            $customer->phone = $data['phone'];
-            $customer->email = $data['email'];
-            $customer->dni = $data['dni'];
-            $customer->address = $data['address'];
-            if ( $this->customerRepository->saveOrUpdate($customer) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        $customer = new UpdateCustomerDto(
+            $id,
+            $data->name,
+            $data->phone,
+            $data->email,
+            $data->dni,
+            $data->address
+        );
+        if ($this->customerRepository->update($id, $customer))
+            return true;
+        return false;
     }
 
     public function deleteCustomer($id)
     {
-        try {
-            if ( $this->customerRepository->delete($id) )
-                return true;
-            return false;
-        } catch (\Throwable $th) {
-            return $th;
-        }
+        if ($this->customerRepository->delete($id))
+            return true;
+        return false;
     }
 
     public function searchCustomer($critery, $value)
     {
-        try {
-            $customers = $this->customerRepository->searchByCriteria($critery, $value);
-            return $customers;
-        } catch (\Throwable $th) {
-            return $th;
+        $data = $this->customerRepository->searchByCriteria($critery, $value);
+        $customers = [];
+        foreach ($data as $d) {
+            $customer = new GetAllCustomersDto($d->id, $d->name, $d->email, $d->dni);
+            array_push($customers, $customer);
         }
+        return $customers;
     }
 }

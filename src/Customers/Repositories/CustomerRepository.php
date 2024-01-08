@@ -4,23 +4,38 @@ namespace Src\Customers\Repositories;
 
 use Src\Customers\Repositories\Contracts\ICustomerRepository;
 use Src\Customers\Models\Customer;
+use Src\Customers\DTOs\CreateCustomerDto;
+use Src\Customers\DTOs\UpdateCustomerDto;
 
 class CustomerRepository implements ICustomerRepository
 {
+    private $customer;
+
+    public function __construct()
+    {
+        $this->customer = new Customer();
+    }
+
     public function getAll()
     {
         try {
-            $customers = Customer::orderBy('dni', 'asc')->get();
+            $customers = $this->customer->orderBy('dni', 'asc')->get();
             return $customers;
         } catch (\Throwable $th) {
             return null;
         }
     }
 
-    public function saveOrUpdate(Customer $customer)
+    public function save(CreateCustomerDto $customer)
     {
         try {
-            $customer->save();
+            $this->customer->create([
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'email' => $customer->email,
+                'dni' => $customer->dni,
+                'address' => $customer->address
+            ]);
             return true;
         } catch (\Throwable $th) {
             return false;
@@ -30,17 +45,33 @@ class CustomerRepository implements ICustomerRepository
     public function getById($id)
     {
         try {
-            $customer = Customer::find($id);
+            $customer = $this->customer->find($id);
             return $customer;
         } catch (\Throwable $th) {
             return null;
         }
     }
 
+    public function update($id, UpdateCustomerDto $customer)
+    {
+        try {
+            $this->customer->where('id', $id)->update([
+                'name' => $customer->name,
+                'phone' => $customer->phone,
+                'email' => $customer->email,
+                'dni' => $customer->dni,
+                'address' => $customer->address
+            ]);
+            return true;
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
     public function delete($id)
     {
         try {
-            Customer::find($id)->delete();
+            $this->customer->find($id)->delete();
             return true;
         } catch (\Throwable $th) {
             return false;
@@ -50,7 +81,7 @@ class CustomerRepository implements ICustomerRepository
     public function searchByCriteria($critery, $value)
     {
         try {
-            $customers = Customer::where($critery, 'LIKE', '%'.$value.'%')->orderBy('dni', 'asc')->get();
+            $customers = $this->customer->where($critery, 'LIKE', '%' . $value . '%')->orderBy('dni', 'asc')->get();
             return $customers;
         } catch (\Throwable $th) {
             return null;

@@ -3,11 +3,14 @@
 namespace Src\Customers\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\RespondsWithHttpStatus;
 use Src\Customers\Services\Contracts\ICustomerService;
 use Src\Customers\Requests\CustomerFormRequest;
 
 class CustomerController extends Controller
 {
+    use RespondsWithHttpStatus;
+
     private $customerService;
 
     public function __construct(ICustomerService $customerService)
@@ -18,83 +21,39 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = $this->customerService->getCustomers();
-        return response()->json([
-            'code' => 200,
-            'message' => 'Petición exitosa',
-            'data' => [
-                'customers' => $customers
-            ]
-        ], 200);
+        return $this->responseWithData(200, 'Petición éxitosa', $customers);
     }
 
     public function store(CustomerFormRequest $request)
     {
-        $request->validated();
-        if ($this->customerService->saveCustomer($request)) {
-            return response()->json([
-                'code' => 201,
-                'message' => 'Petición exitosa'
-            ], 201);
-        }
-
-        return response()->json([
-            'code' => 404,
-            'message' => 'Petición erronea'
-        ], 404);
+        if ($this->customerService->saveCustomer($request))
+            return $this->response(201, 'Petición éxitosa');
+        return $this->response(404, 'Petición erronea');
     }
 
     public function show($id)
     {
         $customer = $this->customerService->getCustomer($id);
-        return response()->json([
-            'code' => 200,
-            'message' => 'Petición exitosa',
-            'data' => [
-                'customer' => $customer
-            ]
-        ], 200);
+        return $this->responseWithData(200, 'Petición éxitosa', $customer);
     }
 
     public function update($id, CustomerFormRequest $request)
     {
-        $request->validated();
-        if ($this->customerService->updateCustomer($id, $request)) {
-            return response()->json([
-                'code' => 200,
-                'message' => 'Petición exitosa'
-            ], 200);
-        }
-
-        return response()->json([
-            'code' => 404,
-            'message' => 'Petición erronea'
-        ], 404);
+        if ($this->customerService->updateCustomer($id, $request))
+            return $this->response(200, 'Petición éxitosa');
+        return $this->response(404, 'Petición erronea');
     }
 
     public function destroy($id)
     {
-        if ($this->customerService->deleteCustomer($id)) {
-            return response()->json([
-                'code' => 200,
-                'message' => 'Petición exitosa'
-            ], 200);
-        }
-
-        return response()->json([
-            'code' => 404,
-            'message' => 'Petición erronea'
-        ], 404);
+        if ($this->customerService->deleteCustomer($id))
+            return $this->response(200, 'Petición éxitosa');
+        return $this->response(404, 'Petición erronea');
     }
 
     public function search($critery, $value)
     {
         $customers = $this->customerService->searchCustomer($critery, $value);
-        return response()->json([
-            'code' => 200,
-            'message' => 'Petición exitosa',
-            'data' => [
-                'customers' => $customers
-            ]
-        ], 200);
+        return $this->responseWithData(200, 'Petición éxitosa', $customers);
     }
 }
